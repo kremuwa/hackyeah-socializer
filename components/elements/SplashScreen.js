@@ -23,6 +23,7 @@ const ScreenTitle = styled.h1`
   margin: 1rem;
 `
 
+
 const SplashScreenForm = styled.form`
   z-index: 2;
   align-items: center;
@@ -51,6 +52,7 @@ const SplashScreen = () => {
     const changeInput = useCallback((event) =>{
         setUsername(event.target.value)
     }, [])
+
     return (
         <WrapperDiv>
             <ScreenTitle>Socializer</ScreenTitle>
