@@ -4,6 +4,7 @@ const _ = require("lodash");
 const cors = require('cors')
 const emojis = require("./emoji");
 const colors = require("./colors");
+const { GAME_STATE } = require("./game-state");
 const crypto = require("crypto");
 
 const app = express();
@@ -56,6 +57,9 @@ const state = {
 // STATE SELECTORS
 //////////////////
 const selectors = {
+    getGameIsStarted: (state) => {
+        return state.session.started;
+    },
     getUser: (state, userId) => {
         const users = state.session.users;
         return users.find(user => user.userId === userId);
@@ -81,13 +85,22 @@ app.get("/users", (req, res) => {
 });
 
 /**
- * Join game session
+ * Join game session.
+ * Username must be unique across all players.
+ * Game must be NOT started already.
  */
 app.post("/game/join", (req, res) => {
     const username = req.body?.username;
     const registeredUsers = state.session.users;
     const id = uuid.v4();
     const matchingPlayer = registeredUsers.find(user => user.username === username);
+    const isGameStarted = selectors.getGameIsStarted(state);
+
+    if (isGameStarted) {
+        return res.status(403).json({
+            error: "Game already started :("
+        });
+    }
 
     if (!username) {
         return res.status(400).json({
@@ -119,10 +132,11 @@ app.post("/game/join", (req, res) => {
 app.post("/game/start", (req, res) => {
     const users = [...state.session.users];
     const pairs = {};
+    const isGameStarted = selectors.getGameIsStarted(state);
 
-    if (state.session.started) {
+    if (isGameStarted) {
         return res.status(403).json({
-            error: "Game already started!"
+            error: "Game already started :("
         });
     }
 
@@ -135,8 +149,6 @@ app.post("/game/start", (req, res) => {
         const color = _.sample(colors);
         const code1 = crypto.randomBytes(2).toString("hex").toUpperCase();
         const code2 = crypto.randomBytes(2).toString("hex").toUpperCase();
-
-
 
         pairs[pairId] = {
             id: pairId,
@@ -184,7 +196,7 @@ app.get("/game/status", (req, res) => {
 
     if (!state.session.started) {
         return res.json({
-            status: "NOT_STARTED",
+            status: GAME_STATE.NOT_STARTED,
             playersCount: state.session.users.length
         });
     }
@@ -198,14 +210,13 @@ app.get("/game/status", (req, res) => {
     }
 
     return res.json({
-        status: "STARTED",
+        status: GAME_STATE.STARTED,
         gameParams: {
             emoji: pairForUser.emoji,
             color: pairForUser.color
         }
     })
 })
-
 
 /**
  * Verifies if one player from the pair typed code of the other one 
