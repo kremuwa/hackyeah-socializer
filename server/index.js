@@ -62,7 +62,7 @@ const selectors = {
     },
     getUser: (state, userId) => {
         const users = state.session.users;
-        return users.find(user => user.userId === userId);
+        return users.find(user => user.id === userId);
     },
     getPairForUser: (state, userId) => {
         const gamePairs = Object.values(state.session.pairs);
