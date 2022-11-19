@@ -3,6 +3,11 @@ import {useCallback, useEffect, useState} from "react";
 import {checkGameForUser} from "../api/game";
 import {toastError} from "../helpers/toast";
 import {Meeting} from "@/elements/Meeting";
+import {GAME_STATE} from "../helpers/constants";
+import {WaitingRoom} from "@/elements/WaitingRoom";
+import {endOfLine} from "tailwindcss/prettier.config";
+
+const {STARTED, NOT_STARTED} = GAME_STATE;
 
 const Game = () => {
     const [error, setError] = useState()
@@ -14,10 +19,10 @@ const Game = () => {
     const {id} = query
 
     const checkGameStatus = useCallback(() => {
-        id && checkGameForUser({
+        id && status !== STARTED && checkGameForUser({
             userId: id,
         }).then((data) => {
-            const {status = "WAITING", gameParams, playersCount} = data || {};
+            const {status = NOT_STARTED, gameParams, playersCount} = data || {};
             setStatus(status)
             playersCount && setPlayersCount(playersCount)
             gameParams && setGameProps(gameParams)
@@ -45,12 +50,8 @@ const Game = () => {
 
     return (
         <div className="container mx-auto my-20 p-5 border-1">
-            <h1>GAME</h1>
-            {!id && <p>Wrong game ID</p>}
-            {id && <p>{status}</p>}
-            {error && <p>{error}</p>}
-            {status === "STARTED" && <Meeting gameParams={gameProps}/>}
-            {playersCount && <p>Players: {playersCount}</p>}
+            {status !== STARTED && <WaitingRoom playersCount={playersCount} status={status} error={error} id={id}/>}
+            {status === STARTED && <Meeting gameParams={gameProps}/>}
         </div>
     );
 };
