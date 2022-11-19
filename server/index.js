@@ -121,6 +121,8 @@ app.post("/game/join", (req, res) => {
 
     state.session.users.push(player);
 
+    console.log(`> Player "${username}" joined!`)
+
     return res.json(player);
 });
 
@@ -170,6 +172,8 @@ app.post("/game/start", (req, res) => {
     // start the game
     state.session.pairs = pairs;
     state.session.started = true;
+
+    console.log(`> Game started! Total of "${state.session.users.length}" players participates!`)
 
     return res.json(state.session.pairs);
 })
@@ -256,5 +260,5 @@ app.post("/game/verify", (req, res) => {
 // STARTUP
 ///////////////////
 app.listen(port, () => {
-    console.log(`Server listening on port ${port}!`)
+    console.log(`> Game server listening on port ${port}!`)
 })
