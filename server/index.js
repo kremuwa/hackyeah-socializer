@@ -30,11 +30,7 @@ const state = {
             {
                 "id": "39857abe-a028-4090-a11f-907de6ab7007",
                 "username": "3"
-            },
-            {
-                "id": "49857abe-a028-4090-a11f-907de6ab7007",
-                "username": "4"
-            },
+            }
         ],
         pairs: {
             // "id": {

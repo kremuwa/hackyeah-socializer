@@ -1,6 +1,6 @@
 const API_URL = 'http://localhost:8000/'
 
-export const sendRequest = ({url, method = "POST", data = {}}) => {
+export const sendRequest = ({url, method = "POST", data, query}) => {
     const options = {
         method,
         headers: {
@@ -9,7 +9,11 @@ export const sendRequest = ({url, method = "POST", data = {}}) => {
         },
         body: data && JSON.stringify(data),
     };
-    return fetch(`${API_URL}${url}`, options)
+    let fullUrl = `${API_URL}${url}`;
+    if (query) {
+        fullUrl += "?" + new URLSearchParams(query)
+    }
+    return fetch(fullUrl, options)
         .then((response) => {
             return new Promise((resolve) => response.json()
                 .then((json) => resolve({
@@ -18,7 +22,7 @@ export const sendRequest = ({url, method = "POST", data = {}}) => {
                     json,
                 })));
         }).then((response) => {
-            const { status, json } = response;
+            const {status, json} = response;
             switch (status) {
                 case 201:
                 case 200:
@@ -28,6 +32,15 @@ export const sendRequest = ({url, method = "POST", data = {}}) => {
                     throw new Error(error);
             }
         })
+}
+
+export const sendGetRequest = ({url, data, query}) => {
+    return sendRequest({
+        url,
+        method: "GET",
+        data,
+        query
+    })
 }
 
 export const sendPostRequest = ({url, data}) => {
