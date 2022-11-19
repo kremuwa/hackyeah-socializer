@@ -56,6 +56,22 @@ const state = {
     }
 };
 
+//////////////////
+// STATE SELECTORS
+//////////////////
+const selectors = {
+    getUser: (state, userId) => {
+        const users = state.session.users;
+        return users.find(user => user.userId === userId);
+    },
+    getPairForUser: (state, userId) => {
+        const gamePairs = Object.values(state.session.pairs);
+        return gamePairs.find(pair =>
+            pair.users.some(user => user.userId === userId)
+        )
+    }
+}
+
 
 ///////////////////
 // ROUTES
@@ -79,7 +95,7 @@ app.post("/game/join", (req, res) => {
 
     if (!username) {
         return res.status(400).json({
-            error: "Missing username!"
+            error: "Missing 'username'!"
         });
     }
 
@@ -156,10 +172,17 @@ app.post("/game/start", (req, res) => {
  */
 app.get("/game/status", (req, res) => {
     const userId = req.query?.userId;
+    const user = selectors.getUser(state, userId);
 
     if (!userId) {
         return res.status(400).json({
-            error: "Missing userId param!"
+            error: "Missing 'userId' param!"
+        });
+    }
+
+    if (!user) {
+        return res.status(403).json({
+            error: `User for "${userId}" userId not found!`
         });
     }
 
@@ -170,10 +193,7 @@ app.get("/game/status", (req, res) => {
         });
     }
 
-    const gamePairs = Object.values(state.session.pairs);
-    const pairForUser = gamePairs.find(pair =>
-        pair.users.some(user => user.userId === userId)
-    )
+    const pairForUser = selectors.getPairForUser(state, userId);
 
     if (!pairForUser) {
         return res.status(404).json({
@@ -190,6 +210,40 @@ app.get("/game/status", (req, res) => {
     })
 })
 
+
+/**
+ * Verifies if one player from the pair typed code of the other one 
+ */
+app.post("/game/verify", (req, res) => {
+    const code = req.query?.code;
+    const userId = req.query?.userId;
+
+    if (!code) {
+        return res.status(400).json({
+            error: "Missing 'code' param!"
+        });
+    }
+
+    if (!userId) {
+        return res.status(400).json({
+            error: "Missing 'userId' param!"
+        });
+    }
+
+    const pairForUser = selectors.getPairForUser(state, userId);
+
+    if (!pairForUser) {
+        return res.status(404).json({
+            error: `Pair for "${userId}" userId not found!`
+        });
+    }
+
+    const matchingPlayer = pairForUser.users.find(user => user.userId !== userId);
+
+    return res.json({
+        success: matchingPlayer.code === code
+    });
+});
 
 ///////////////////
 // STARTUP
