@@ -1,6 +1,7 @@
 import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import {checkGameForUser} from "../api/game";
+import {toastError} from "../helpers/toast";
 
 const Game = () => {
     const [error, setError] = useState()
@@ -11,13 +12,19 @@ const Game = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            return checkGameForUser({
+            checkGameForUser({
                 userId: id,
             }).then((data) => {
                 const {status = "WAITING"} = data || {};
                 setStatus(status)
-            }).catch((error) =>{
-                setError(error.toString())
+            }).catch((response) =>{
+                const{error, status} = response;
+                if (status === 403){
+                    router.push("/");
+                    toastError(error)
+                }else{
+                    setError(response.error)
+                }
             })
         }, 1000);
         return () => clearInterval(interval);

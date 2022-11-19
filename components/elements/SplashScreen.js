@@ -5,7 +5,7 @@ import {Giraffe} from "./Girrafe";
 import {useCallback, useState} from "react";
 import {joinGame} from "../../api/join";
 import {useRouter} from "next/router";
-import {toastError} from "../../helpers/toast";
+import {toastServerError} from "../../helpers/toast";
 
 const WrapperDiv = styled.div`
   display: flex;
@@ -45,7 +45,7 @@ const SplashScreen = () => {
         event.preventDefault();
         joinGame({username}).then((response) => {
             router.push(`/game?id=${response.id}`)
-        }).catch(toastError)
+        }).catch(toastServerError)
     }, [username]);
 
     const changeInput = useCallback((event) =>{
