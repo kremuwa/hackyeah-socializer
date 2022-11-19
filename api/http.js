@@ -22,15 +22,18 @@ export const sendRequest = ({url, method = "POST", data, query}) => {
                     json,
                 })));
         }).then((response) => {
-            const {status, json} = response;
-            switch (status) {
-                case 201:
-                case 200:
-                    return json
-                default:
-                    const {error = "Unknown Error"} = json;
-                    throw new Error(error);
-            }
+            return new Promise((resolve, reject) => {
+                const {status, json} = response;
+                switch (status) {
+                    case 201:
+                    case 200:
+                        resolve(json)
+                        break;
+                    default:
+                        const {error = "Unknown Error"} = json;
+                        reject({error, status});
+                }
+            })
         })
 }
 
