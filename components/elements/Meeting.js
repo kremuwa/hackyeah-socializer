@@ -1,13 +1,26 @@
 import styled from "styled-components";
 import Twemoji from "react-twemoji";
+import { Button } from "./Button";
 
-const EmojiWrapper = styled.div`
-  text-align: center;
+const Wrapper = styled.div`
+  align-items: stretch;
+  justify-content: center;
+  display: inline-flex;
+  flex-direction: column;
   background-color: ${(props) => props.backgroundColor};
   & img {
-    width: 80%;
+    height: 60vh;
+    max-width: 80%;
   }
-  height: 100vh
+  height: 100vh;
+  width: 100%;
+  text-align: center;
+`;
+
+const ButtonWrapper = styled.div`
+  margin-top: 10vh;
+  justify-content: center;
+  display: flex;
 `;
 
 export const Meeting = (props) => {
@@ -15,7 +28,7 @@ export const Meeting = (props) => {
   const { color, emoji } = gameParams;
 
   return (
-    <EmojiWrapper backgroundColor={color}>
+    <Wrapper backgroundColor={color}>
       <Twemoji
         options={{
           folder: "svg",
@@ -24,6 +37,9 @@ export const Meeting = (props) => {
       >
         {emoji}
       </Twemoji>
-    </EmojiWrapper>
+      <ButtonWrapper>
+        <Button>I found my partner!</Button>
+      </ButtonWrapper>
+    </Wrapper>
   );
 };
