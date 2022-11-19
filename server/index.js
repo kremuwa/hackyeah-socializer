@@ -21,12 +21,16 @@ const state = {
                 "username": "1"
             },
             {
-                "id": "19857abe-a028-4090-a11f-907de6ab7007",
+                "id": "29857abe-a028-4090-a11f-907de6ab7007",
                 "username": "2"
             },
             {
-                "id": "19857abe-a028-4090-a11f-907de6ab7007",
+                "id": "39857abe-a028-4090-a11f-907de6ab7007",
                 "username": "3"
+            },
+            {
+                "id": "49857abe-a028-4090-a11f-907de6ab7007",
+                "username": "4"
             },
         ],
         pairs: {
@@ -34,7 +38,7 @@ const state = {
             //     id: "id",
             //     emoji: "🦍",
             //     color: "#ffffff",
-            //     pair: [
+            //     users: [
             //         {
             //             code: "ABCD",
             //             userId: "fsfsaf-fs-afs-afs"
@@ -115,12 +119,12 @@ app.post("/game/start", (req, res) => {
         const emoji = _.sample(emojis);
         const color = _.sample(colors);
 
-    
+
         pairs[pairId] = {
             id: pairId,
             emoji: emoji.emoji,
             color,
-            pair: [
+            users: [
                 {
                     userId: user1.id,
                     code: "ABCD"
@@ -157,8 +161,23 @@ app.get("/game/status", (req, res) => {
         });
     }
 
+    const gamePairs = Object.values(state.session.pairs);
+    const pairForUser = gamePairs.find(pair =>
+        pair.users.some(user => user.userId === userId)
+    )
+
+    if (!pairForUser) {
+        return res.status(404).json({
+            error: `Pair for "${userId}" userId not found!`
+        });
+    }
+
     return res.json({
         status: "STARTED",
+        gameParams: {
+            emoji: pairForUser.emoji,
+            color: pairForUser.color
+        }
     })
 })
 
