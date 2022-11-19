@@ -5,17 +5,21 @@ const WrapperDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
 
   width: 100vw;
   height: 100vh;
   padding: 25px;
 `
 
+const ScreenTitle = styled.h1`
+  font-size: 3em;
+`
+
 const SplashScreen = () => {
   return (
     <WrapperDiv>
-      <h1>Socializer</h1>
+      <ScreenTitle>Socializer</ScreenTitle>
 
       <Button>Join!</Button>
     </WrapperDiv>

@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Zorque';
+  src: url('/fonts/Zorque-Regular.woff2') format('woff2'),
+      url('/fonts/Zorque-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 
 body{
@@ -10,6 +18,9 @@ body{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Zorque';
+  font-weight: normal;
+  font-style: normal;
 }
 
 

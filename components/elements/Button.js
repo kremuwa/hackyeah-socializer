@@ -13,7 +13,6 @@ export const Button = styled.button`
 
 	text-transform: uppercase;
 	font-size: 1.4em;
-	font-family: "Work Sans", sans-serif;
 	font-weight: 500;
 	letter-spacing: 0.04em;
 
