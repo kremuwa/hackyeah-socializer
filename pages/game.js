@@ -5,9 +5,13 @@ import {toastError} from "../helpers/toast";
 import {Meeting} from "@/elements/Meeting";
 import {GAME_STATE} from "../helpers/constants";
 import {WaitingRoom} from "@/elements/WaitingRoom";
-import {endOfLine} from "tailwindcss/prettier.config";
+import styled from "styled-components";
 
 const {STARTED, NOT_STARTED} = GAME_STATE;
+
+const GameWrapper = styled.div`
+  height: 100vh;
+`
 
 const Game = () => {
     const [error, setError] = useState()
@@ -49,10 +53,10 @@ const Game = () => {
     }, [id])
 
     return (
-        <div className="container mx-auto my-20 p-5 border-1">
+        <GameWrapper className="container mx-auto my-20 p-5 border-1">
             {status !== STARTED && <WaitingRoom playersCount={playersCount} status={status} error={error} id={id}/>}
             {status === STARTED && <Meeting gameParams={gameProps}/>}
-        </div>
+        </GameWrapper>
     );
 };
 
