@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import SplashScreen from "../components/elements/SplashScreen";;
 import enableMessaging from "@/messaging/enableMessaging";
 
 export default function Home({ data }) {
@@ -7,12 +8,13 @@ export default function Home({ data }) {
   return (
     <div>
       <Head>
-        <title>Next + Firebase</title>
+        <title>Socializer</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
       <main>
-        Hello World!
+        <SplashScreen />
       </main>
     </div>
   );
