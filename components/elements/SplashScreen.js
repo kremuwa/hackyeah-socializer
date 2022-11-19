@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Button } from "./Button";
+import { Giraffe } from "./Girrafe";
 
 const WrapperDiv = styled.div`
   display: flex;
@@ -14,11 +15,13 @@ const WrapperDiv = styled.div`
 
 const ScreenTitle = styled.h1`
   font-size: 3em;
+  color: darkslategray;
 `
 
 const SplashScreen = () => {
   return (
     <WrapperDiv>
+      <Giraffe></Giraffe>
       <ScreenTitle>Socializer</ScreenTitle>
 
       <Button>Join!</Button>
