@@ -35,3 +35,7 @@ yarn-error.log*
 
 # service account
 service.json
+
+.idea
+.firebaserc
+.firebase
