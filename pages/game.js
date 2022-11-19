@@ -7,24 +7,26 @@ import {Meeting} from "@/elements/Meeting";
 const Game = () => {
     const [error, setError] = useState()
     const [status, setStatus] = useState()
+    const [playersCount, setPlayersCount] = useState()
     const [gameProps, setGameProps] = useState();
     const router = useRouter()
     const {query = {}} = router
     const {id} = query
 
     const checkGameStatus = useCallback(() => {
-        checkGameForUser({
+        id && checkGameForUser({
             userId: id,
         }).then((data) => {
-            const {status = "WAITING",gameParams} = data || {};
+            const {status = "WAITING", gameParams, playersCount} = data || {};
             setStatus(status)
+            playersCount && setPlayersCount(playersCount)
             gameParams && setGameProps(gameParams)
-        }).catch((response) =>{
-            const{error, status} = response;
-            if (status === 403){
+        }).catch((response) => {
+            const {error, status} = response;
+            if (status === 403) {
                 router.push("/");
                 toastError(error)
-            }else{
+            } else {
                 setError(response.error)
             }
         })
@@ -32,7 +34,7 @@ const Game = () => {
 
     useEffect(() => {
         checkGameStatus();
-    },[])
+    }, [])
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -47,7 +49,8 @@ const Game = () => {
             {!id && <p>Wrong game ID</p>}
             {id && <p>{status}</p>}
             {error && <p>{error}</p>}
-            {status === "STARTED" && <Meeting gameProps={gameProps}/>}
+            {status === "STARTED" && <Meeting gameParams={gameProps}/>}
+            {playersCount && <p>Players: {playersCount}</p>}
         </div>
     );
 };
