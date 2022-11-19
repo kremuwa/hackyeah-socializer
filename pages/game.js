@@ -1,31 +1,42 @@
 import {useRouter} from "next/router";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {checkGameForUser} from "../api/game";
 import {toastError} from "../helpers/toast";
+import {Meeting} from "@/elements/Meeting";
 
 const Game = () => {
     const [error, setError] = useState()
     const [status, setStatus] = useState()
+    const [gameProps, setGameProps] = useState();
     const router = useRouter()
     const {query = {}} = router
     const {id} = query
 
+    const checkGameStatus = useCallback(() => {
+        checkGameForUser({
+            userId: id,
+        }).then((data) => {
+            const {status = "WAITING",gameParams} = data || {};
+            setStatus(status)
+            gameParams && setGameProps(gameParams)
+        }).catch((response) =>{
+            const{error, status} = response;
+            if (status === 403){
+                router.push("/");
+                toastError(error)
+            }else{
+                setError(response.error)
+            }
+        })
+    }, [id])
+
+    useEffect(() => {
+        checkGameStatus();
+    },[])
+
     useEffect(() => {
         const interval = setInterval(() => {
-            checkGameForUser({
-                userId: id,
-            }).then((data) => {
-                const {status = "WAITING"} = data || {};
-                setStatus(status)
-            }).catch((response) =>{
-                const{error, status} = response;
-                if (status === 403){
-                    router.push("/");
-                    toastError(error)
-                }else{
-                    setError(response.error)
-                }
-            })
+            checkGameStatus();
         }, 1000);
         return () => clearInterval(interval);
     }, [id])
@@ -36,6 +47,7 @@ const Game = () => {
             {!id && <p>Wrong game ID</p>}
             {id && <p>{status}</p>}
             {error && <p>{error}</p>}
+            {status === "STARTED" && <Meeting gameProps={gameProps}/>}
         </div>
     );
 };
