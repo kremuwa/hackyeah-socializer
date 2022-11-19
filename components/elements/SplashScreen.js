@@ -51,6 +51,7 @@ const SplashScreen = () => {
     const changeInput = useCallback((event) =>{
         setUsername(event.target.value)
     }, [])
+
     return (
         <WrapperDiv>
             <ScreenTitle>Socializer</ScreenTitle>
