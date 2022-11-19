@@ -3,6 +3,7 @@ const uuid = require('uuid');
 const _ = require("lodash");
 const emojis = require("./emoji");
 const colors = require("./colors");
+const crypto = require("crypto");
 
 const app = express();
 const port = 8000;
@@ -118,7 +119,10 @@ app.post("/game/start", (req, res) => {
         const user2 = users.splice(_.random(users.length - 1), 1)[0];
         const emoji = _.sample(emojis);
         const color = _.sample(colors);
+        const code1 = crypto.randomBytes(2).toString("hex").toUpperCase();
+        const code2 = crypto.randomBytes(2).toString("hex").toUpperCase();
 
+        
 
         pairs[pairId] = {
             id: pairId,
@@ -127,11 +131,11 @@ app.post("/game/start", (req, res) => {
             users: [
                 {
                     userId: user1.id,
-                    code: "ABCD"
+                    code: code1
                 },
                 {
                     userId: user2.id,
-                    code: "ABCD"
+                    code: code2
                 }
             ]
         }
@@ -145,6 +149,9 @@ app.post("/game/start", (req, res) => {
 })
 
 
+/**
+ * Check game status and params of the game for given player
+ */
 app.get("/game/status", (req, res) => {
     const userId = req.query?.userId;
 
