@@ -1,6 +1,11 @@
 import styled from "styled-components";
-import { Button } from "./Button";
-import { Giraffe } from "./Girrafe";
+import {Button} from "./Button";
+import {Input} from "./Input";
+import {Giraffe} from "./Girrafe";
+import {useCallback, useState} from "react";
+import {joinGame} from "../../api/join";
+import {useRouter} from "next/router";
+import {toastError} from "../../helpers/toast";
 
 const WrapperDiv = styled.div`
   display: flex;
@@ -18,15 +23,44 @@ const ScreenTitle = styled.h1`
   color: darkslategray;
 `
 
-const SplashScreen = () => {
-  return (
-    <WrapperDiv>
-      <Giraffe></Giraffe>
-      <ScreenTitle>Socializer</ScreenTitle>
+const SplashScreenForm = styled.form`
+  z-index: 2;
+  align-items: center;
+  justify-content: center;
+  display: inline-flex;
+  flex-direction: column;
+  background-color: rgba(208, 208, 208, 0.3);
+  padding: 5vh;
 
-      <Button>Join!</Button>
-    </WrapperDiv>
-  );
+  ${Button} {
+    margin-top: 5vh;
+  }
+`
+
+const SplashScreen = () => {
+    const [username,setUsername] = useState("");
+    const router = useRouter()
+
+    const handleSubmit = useCallback((event) => {
+        event.preventDefault();
+        joinGame({username}).then((response) => {
+            router.push(`/game?id=${response.id}`)
+        }).catch(toastError)
+    }, [username]);
+
+    const changeInput = useCallback((event) =>{
+        setUsername(event.target.value)
+    }, [])
+    return (
+        <WrapperDiv>
+            <ScreenTitle>Socializer</ScreenTitle>
+            <SplashScreenForm onSubmit={handleSubmit}>
+                <Input value={username} type="text" placeholder="Your username" onChange={changeInput}/>
+                <Button>Join!</Button>
+            </SplashScreenForm>
+            <Giraffe></Giraffe>
+        </WrapperDiv>
+    );
 };
 
 export default SplashScreen;
