@@ -12,6 +12,8 @@ const port = 8000;
 
 app.use(cors())
 app.use(express.json());
+app.use(express.static(__dirname + '/../out', {extensions:['html']}))
+
 
 ///////////////////
 // STATE
@@ -20,18 +22,18 @@ const state = {
     session: {
         started: false,
         users: [
-            {
-                "id": "19857abe-a028-4090-a11f-907de6ab7007",
-                "username": "1"
-            },
-            {
-                "id": "29857abe-a028-4090-a11f-907de6ab7007",
-                "username": "2"
-            },
-            {
-                "id": "39857abe-a028-4090-a11f-907de6ab7007",
-                "username": "3"
-            }
+            // {
+            //     "id": "19857abe-a028-4090-a11f-907de6ab7007",
+            //     "username": "1"
+            // },
+            // {
+            //     "id": "29857abe-a028-4090-a11f-907de6ab7007",
+            //     "username": "2"
+            // },
+            // {
+            //     "id": "39857abe-a028-4090-a11f-907de6ab7007",
+            //     "username": "3"
+            // }
         ],
         pairs: {
             // "id": {
