@@ -226,6 +226,7 @@ app.get("/game/status", (req, res) => {
     return res.json({
       status: GAME_STATE.FULFILLED,
       gameParams: {
+        pairId: pairForUser.id,
         emoji: pairForUser.emoji,
         color: pairForUser.color,
         userCode: pairForUser.users.find((user) => user.userId === userId).code,
@@ -236,6 +237,7 @@ app.get("/game/status", (req, res) => {
   return res.json({
     status: GAME_STATE.STARTED,
     gameParams: {
+      pairId: pairForUser.id,
       emoji: pairForUser.emoji,
       color: pairForUser.color,
       userCode: pairForUser.users.find((user) => user.userId === userId).code,
