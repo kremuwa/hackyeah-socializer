@@ -1,35 +1,44 @@
 import Head from "next/head";
 import Link from "next/link";
-import SplashScreen from "../components/elements/SplashScreen";;
+import SplashScreen from "../components/elements/SplashScreen";
+
+;
 import enableMessaging from "@/messaging/enableMessaging";
 
-export default function Home({ data }) {
-  //{data} is from getStaticProps() exported below.
-  return (
-    <div>
-      <Head>
-        <title>Socializer</title>
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="preload" href="/fonts/Zorque-Regular.woff2" as="font" type="font/woff2" crossOrigin="true"></link>
-      </Head>
+export default function Home({data}) {
+    //{data} is from getStaticProps() exported below.
+    return (
+        <div>
+            <Head>
+                <title>Socializer</title>
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
+                <link rel="manifest" href="/site.webmanifest"/>
+                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"/>
+                <meta name="msapplication-TileColor" content="#da532c"/>
+                <meta name="theme-color" content="#ffffff"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <link rel="preload" href="/fonts/Zorque-Regular.woff2" as="font" type="font/woff2"
+                      crossOrigin="true"></link>
+            </Head>
 
-      <main>
-        <SplashScreen />
-      </main>
-    </div>
-  );
+            <main>
+                <SplashScreen/>
+            </main>
+        </div>
+    );
 }
 
 export async function getStaticProps(context) {
-  //Note: Do not use client functions here!
+    //Note: Do not use client functions here!
 
-  //getDoc function is from Admin SDK.
-  const data = await import("@/FS-admin-functions").then(({ getDoc }) =>
-    getDoc()
-  );
+    //getDoc function is from Admin SDK.
+    const data = await import("@/FS-admin-functions").then(({getDoc}) =>
+        getDoc()
+    );
 
-  return {
-    props: { data }, // will be passed to the page component as props
-  };
+    return {
+        props: {data}, // will be passed to the page component as props
+    };
 }
