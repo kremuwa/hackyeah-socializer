@@ -40,13 +40,16 @@ const SplashScreenForm = styled.form`
 const NameInput = styled(Input)`
   font-size: 0.8em;
   background: rgba(255, 255, 255, 0.5);
-  border-radius: 8px;
+  /* border-radius: 8px; */
   text-shadow: -1px 1px 0 #fff, 1px 1px 0 #fff, 1px -1px 0 #fff,
     -1px -1px 0 #fff;
   border-style: inset;
   padding: 8px;
   width: 80%;
   text-align: center;
+  border: none;
+  border-bottom: 2px solid black;
+  background: none;
 
   &::placeholder {
     opacity: 0.5;

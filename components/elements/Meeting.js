@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Twemoji from "react-twemoji";
-import useSound  from "use-sound";
+import useSound from "use-sound";
 import { Button } from "./Button";
 import { useState, useCallback } from "react";
 import { verifyCode } from "api/verifyCode";
@@ -16,7 +16,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   background-color: ${(props) => props.backgroundColor};
   & img {
-    height: 60vh;
+    height: 30vh;
     max-width: 80%;
   }
   height: 100vh;
@@ -37,13 +37,16 @@ const ButtonWrapper = styled.div`
 const CodeInput = styled(Input)`
   font-size: 0.8em;
   background: rgba(255, 255, 255, 0.5);
-  border-radius: 8px;
-  text-shadow: -1px 1px 0 #fff, 1px 1px 0 #fff, 1px -1px 0 #fff, -1px -1px 0 #fff;
+  /* border-radius: 8px; */
+  text-shadow: -1px 1px 0 #fff, 1px 1px 0 #fff, 1px -1px 0 #fff,
+    -1px -1px 0 #fff;
   border-style: inset;
-  border-width: 2px;
   padding: 8px;
   width: 80%;
-  text-align: center;
+  border: none;
+  border-bottom: 2px solid black;
+  background: none;
+  width: 80%;
 
   &::placeholder {
     opacity: 0.5;
@@ -51,8 +54,9 @@ const CodeInput = styled(Input)`
 `;
 
 const UserCode = styled.div`
-  margin-bottom: 16px;
-  text-shadow: -1px 1px 0 #006400, 1px 1px 0 #006400, 1px -1px 0 #006400, -1px -1px 0 #006400;
+  margin-top: 16px;
+  text-shadow: -1px 1px 0 #006400, 1px 1px 0 #006400, 1px -1px 0 #006400,
+    -1px -1px 0 #006400;
 `;
 
 const CodeVerificationForm = styled.form`
@@ -108,7 +112,7 @@ export const Meeting = (props) => {
   return (
     <Wrapper backgroundColor={color}>
       <Twemoji
-        onClick={() => Math.random() > 0.5 ? play1() : play2}
+        onClick={() => (Math.random() > 0.5 ? play1() : play2)}
         options={{
           folder: "svg",
           ext: ".svg",
@@ -124,17 +128,18 @@ export const Meeting = (props) => {
         </ButtonWrapper>
       )}
       {isAttemptingCodeVerification && (
-        <CodeVerificationForm onSubmit={handleSubmit}>
+        <>
           <UserCode>Your code: {userCode}</UserCode>
-          <hr style={{width: "100%", marginBottom: 24 }}/>
-          <CodeInput
-            value={partnerCode}
-            type="text"
-            placeholder="Your partner's code"
-            onChange={changeInput}
-          />
-          <Button>Submit</Button>
-        </CodeVerificationForm>
+          <CodeVerificationForm onSubmit={handleSubmit}>
+            <CodeInput
+              value={partnerCode}
+              type="text"
+              placeholder="Your partner's code"
+              onChange={changeInput}
+            />
+            <Button>Submit</Button>
+          </CodeVerificationForm>
+        </>
       )}
       {isPartnerFound && (
         <ButtonWrapper>
