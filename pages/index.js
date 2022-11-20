@@ -1,7 +1,4 @@
-import Head from "next/head";
-import Link from "next/link";
-import SplashScreen from "../components/elements/SplashScreen";;
-import enableMessaging from "@/messaging/enableMessaging";
+import SplashScreen from "../components/elements/SplashScreen";
 
 export default function Home({ data }) {
   //{data} is from getStaticProps() exported below.
@@ -22,14 +19,14 @@ export default function Home({ data }) {
 }
 
 export async function getStaticProps(context) {
-  //Note: Do not use client functions here!
+    //Note: Do not use client functions here!
 
-  //getDoc function is from Admin SDK.
-  const data = await import("@/FS-admin-functions").then(({ getDoc }) =>
-    getDoc()
-  );
+    //getDoc function is from Admin SDK.
+    const data = await import("@/FS-admin-functions").then(({getDoc}) =>
+        getDoc()
+    );
 
-  return {
-    props: { data }, // will be passed to the page component as props
-  };
+    return {
+        props: {data}, // will be passed to the page component as props
+    };
 }
