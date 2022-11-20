@@ -47,6 +47,12 @@ const Game = () => {
     }, [])
 
     useEffect(() => {
+        if (gameProps?.color) {
+            document.querySelector('meta[name="theme-color"]')?.setAttribute('content', gameProps?.color);
+        }
+    }, [gameProps?.color])
+
+    useEffect(() => {
         const interval = setInterval(() => {
             checkGameStatus();
         }, 1000);
