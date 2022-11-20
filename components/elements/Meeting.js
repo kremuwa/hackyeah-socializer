@@ -8,6 +8,8 @@ import { toastError, toastServerError } from "helpers/toast";
 import { Input } from "./Input";
 import giraffe1 from "../../public/sounds/giraffe1.mp3";
 import giraffe2 from "../../public/sounds/giraffe2.mp3";
+import dynamic from "next/dynamic"
+
 
 const Wrapper = styled.div`
   align-items: stretch;
@@ -74,10 +76,15 @@ const CodeVerificationForm = styled.form`
   }
 `;
 
+const ChatNoSSR = dynamic(() => import('../elements/ChatComponent'), {
+  ssr: false
+})
+
 export const Meeting = (props) => {
   const { gameParams = {}, userId } = props;
+  console.log('meeting:' , userId);
+  console.log('gameParam:' , gameParams);
   const { color, emoji, userCode } = gameParams;
-
   const [isAttemptingCodeVerification, setIsAttemptingCodeVerification] =
     useState(false);
   const [isPartnerFound, setIsPartnerFound] = useState(false);
@@ -147,6 +154,7 @@ export const Meeting = (props) => {
           <Button>Congrats!</Button>
         </ButtonWrapper>
       )}
+      <ChatNoSSR pairId={gameParams.pairId} userId={userId}/>
     </Wrapper>
   );
 };

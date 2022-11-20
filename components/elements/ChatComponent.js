@@ -4,22 +4,20 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import EmojiPicker, { Emoji } from "emoji-picker-react";
 import {useRouter} from "next/router";
 
-const ChatComponent = () => {
-	const router = useRouter()
-    const {query = {}} = router;
-    const {id, userid} = query;
+const ChatComponent = ({pairId, userId}) => {
+
 
 	const [value, loading, error] = useCollection(
-		firebase.firestore().collection(`chat${id}`),
+		firebase.firestore().collection(`chat${pairId}`),
 	);
 
 	const [messages, setMessages] = useState([]);
 	const chatBottom = useRef(null);
 
 	const createMessage = (text) => {
-		firebase.firestore().collection(`chat${id}`).doc().set({
+		firebase.firestore().collection(`chat${pairId}`).doc().set({
 			created: Date.now(),
-			user: userid,
+			user: userId,
 			message: text
 		}).then(() => {
 			chatBottom.current?.scrollIntoView({ behavior: "smooth" })
@@ -44,7 +42,7 @@ const ChatComponent = () => {
 			{loading && <span>Loading...</span>}
 			<>
 				{messages?.map(doc =>
-					<div key={doc.created} className={`message ${doc.user === userid ? "sent" : "received"}`}>
+					<div key={doc.created} className={`message ${doc.user === userId ? "sent" : "received"}`}>
 						<Emoji unified={doc.message} size={100} emojiStyle="twitter" />
 					</div>
 				)}
