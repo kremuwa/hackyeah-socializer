@@ -8,18 +8,18 @@ import { toastError, toastServerError } from "helpers/toast";
 import { Input } from "./Input";
 import NextLink from "next/link";
 
-import dynamic from "next/dynamic"
-import {getAnimalSound} from "../../helpers/sounds";
-
+import dynamic from "next/dynamic";
+import { getAnimalSound } from "../../helpers/sounds";
 
 const Wrapper = styled.div`
+  padding-top: 32px;
   align-items: stretch;
   justify-content: center;
   display: inline-flex;
   flex-direction: column;
   background-color: ${(props) => props.backgroundColor};
   & img {
-    height: 30vh;
+    height: 40vh;
     max-width: 80%;
   }
   height: 100vh;
@@ -44,8 +44,8 @@ const CongratsWrapper = styled.div`
   display: flex;
   height: 100%;
   align-items: center;
-  
-  img{
+
+  img {
     max-height: 260px;
     width: auto;
     margin: 2rem;
@@ -106,6 +106,7 @@ export const Meeting = (props) => {
   const { color, emoji, userCode, duration } = gameParams;
   const [isAttemptingCodeVerification, setIsAttemptingCodeVerification] =
     useState(false);
+  const [isChatVisible, setIsChatVisible] = useState(false);
   const [partnerCode, setPartnerCode] = useState("");
 
   const handleSubmit = useCallback(
@@ -132,21 +133,27 @@ export const Meeting = (props) => {
 
   const toHHMMSS = (numSecs) => {
     let secNum = parseInt(numSecs, 10);
-    let hours = Math.floor(secNum / 3600).toString().padStart(2, '0');
-    let minutes = Math.floor((secNum - (hours * 3600)) / 60).toString().padStart(2, '0');
-    let seconds = (secNum - (hours * 3600) - (minutes * 60)).toString().padStart(2, '0');
+    let hours = Math.floor(secNum / 3600)
+      .toString()
+      .padStart(2, "0");
+    let minutes = Math.floor((secNum - hours * 3600) / 60)
+      .toString()
+      .padStart(2, "0");
+    let seconds = (secNum - hours * 3600 - minutes * 60)
+      .toString()
+      .padStart(2, "0");
     return `${hours}:${minutes}:${seconds}`;
-  }
+  };
 
   const [play] = useSound(getAnimalSound(emoji));
 
   if (isFinished) {
     return (
       <CongratsWrapper>
-          <img src="/images/congratulations.png" alt="happy"/>
-        {
-          duration && <p>It took you both  {toHHMMSS(duration / 1000)}. Great job!</p>
-        }
+        <img src="/images/congratulations.png" alt="happy" />
+        {duration && (
+          <p>It took you both {toHHMMSS(duration / 1000)}. Great job!</p>
+        )}
         <NextLink href="/">
           <Button>Go to lobby!</Button>
         </NextLink>
@@ -156,46 +163,70 @@ export const Meeting = (props) => {
 
   return (
     <Wrapper backgroundColor={color}>
-      <Twemoji
-        onClick={play}
-        options={{
-          folder: "svg",
-          ext: ".svg",
+      <button
+        onClick={() => setIsChatVisible(!isChatVisible)}
+        style={{
+          justifySelf: "start",
+          position: "fixed",
+          top: 0,
+          fontSize: 24,
+          background: "white",
+          border: "none",
+          width: "100%",
         }}
       >
-        {emoji}
-      </Twemoji>
-      {!isAttemptingCodeVerification && (
+        {isChatVisible ? "← Back to animal" : "Show chat"}
+      </button>
+      {isChatVisible ? (
+        <ChatNoSSR pairId={gameParams.pairId} userId={userId} />
+      ) : (
         <>
-          <ButtonWrapper>
-            <Button onClick={() => setIsAttemptingCodeVerification(true)}>
-              I found my partner!
-            </Button>
-          </ButtonWrapper>
-          <ChatNoSSR pairId={gameParams.pairId} userId={userId} />
-        </>
-      )}
-      {isAttemptingCodeVerification && (
-        <>
-          <UserCode>Your code: {userCode}</UserCode>
-          <CodeVerificationForm onSubmit={handleSubmit}>
-            <CodeInput
-              value={partnerCode}
-              type="text"
-              placeholder="Your partner's code"
-              onChange={changeInput}
-              maxLength={4}
-            />
-            <div style={{ display: "flex" }}>
-              <Button
-                onClick={() => setIsAttemptingCodeVerification(false)}
-                style={{ background: "none", border: "1px solid white" }}
-              >
-                Cancel
-              </Button>
-              <Button style={{ marginLeft: 10 }}>Submit</Button>
-            </div>
-          </CodeVerificationForm>
+          {!isAttemptingCodeVerification && (
+            <h3 style={{ margin: "16px" }}>
+              Find a partner with a matching animal and background color
+            </h3>
+          )}
+          <Twemoji
+            onClick={play}
+            options={{
+              folder: "svg",
+              ext: ".svg",
+            }}
+          >
+            {emoji}
+          </Twemoji>
+          {!isAttemptingCodeVerification && (
+            <>
+              <ButtonWrapper>
+                <Button onClick={() => setIsAttemptingCodeVerification(true)}>
+                  I found my partner!
+                </Button>
+              </ButtonWrapper>
+            </>
+          )}
+          {isAttemptingCodeVerification && (
+            <>
+              <UserCode>Your code: {userCode}</UserCode>
+              <CodeVerificationForm onSubmit={handleSubmit}>
+                <CodeInput
+                  value={partnerCode}
+                  type="text"
+                  placeholder="Your partner's code"
+                  onChange={changeInput}
+                  maxLength={4}
+                />
+                <div style={{ display: "flex" }}>
+                  <Button
+                    onClick={() => setIsAttemptingCodeVerification(false)}
+                    style={{ background: "none", border: "1px solid white" }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button style={{ marginLeft: 10 }}>Submit</Button>
+                </div>
+              </CodeVerificationForm>
+            </>
+          )}
         </>
       )}
     </Wrapper>
