@@ -55,7 +55,7 @@ const Game = () => {
     return (
         <GameWrapper className="container mx-auto my-20 p-5 border-1">
             {status !== STARTED && <WaitingRoom playersCount={playersCount} status={status} error={error} id={id}/>}
-            {status === STARTED && <Meeting gameParams={gameProps}/>}
+            {status === STARTED && <Meeting gameParams={gameProps} userId={id}/>}
         </GameWrapper>
     );
 };

@@ -1,7 +1,7 @@
-const express = require('express');
-const uuid = require('uuid');
+const express = require("express");
+const uuid = require("uuid");
 const _ = require("lodash");
-const cors = require('cors')
+const cors = require("cors");
 const emojis = require("./emoji");
 const colors = require("./colors");
 const { GAME_STATE } = require("./game-state");
@@ -10,7 +10,7 @@ const crypto = require("crypto");
 const app = express();
 const port = 8000;
 
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname + '/../out', {extensions:['html']}))
 
@@ -59,31 +59,30 @@ const state = {
 // STATE SELECTORS
 //////////////////
 const selectors = {
-    getGameIsStarted: (state) => {
-        return state.session.started;
-    },
-    getUser: (state, userId) => {
-        const users = state.session.users;
-        return users.find(user => user.id === userId);
-    },
-    getPairForUser: (state, userId) => {
-        const gamePairs = Object.values(state.session.pairs);
-        return gamePairs.find(pair =>
-            pair.users.some(user => user.userId === userId)
-        )
-    }
-}
-
+  getGameIsStarted: (state) => {
+    return state.session.started;
+  },
+  getUser: (state, userId) => {
+    const users = state.session.users;
+    return users.find((user) => user.id === userId);
+  },
+  getPairForUser: (state, userId) => {
+    const gamePairs = Object.values(state.session.pairs);
+    return gamePairs.find((pair) =>
+      pair.users.some((user) => user.userId === userId)
+    );
+  },
+};
 
 ///////////////////
 // ROUTES
 ///////////////////
 app.get("/state", (req, res) => {
-    return res.json(state);
-})
+  return res.json(state);
+});
 
 app.get("/users", (req, res) => {
-    return res.json(state.session.users);
+  return res.json(state.session.users);
 });
 
 /**
@@ -92,40 +91,42 @@ app.get("/users", (req, res) => {
  * Game must be NOT started already.
  */
 app.post("/game/join", (req, res) => {
-    const username = req.body?.username;
-    const registeredUsers = state.session.users;
-    const id = uuid.v4();
-    const matchingPlayer = registeredUsers.find(user => user.username === username);
-    const isGameStarted = selectors.getGameIsStarted(state);
+  const username = req.body?.username;
+  const registeredUsers = state.session.users;
+  const id = uuid.v4();
+  const matchingPlayer = registeredUsers.find(
+    (user) => user.username === username
+  );
+  const isGameStarted = selectors.getGameIsStarted(state);
 
-    if (isGameStarted) {
-        return res.status(403).json({
-            error: "Game already started :("
-        });
-    }
+  if (isGameStarted) {
+    return res.status(403).json({
+      error: "Game already started :(",
+    });
+  }
 
-    if (!username) {
-        return res.status(400).json({
-            error: "Missing 'username'!"
-        });
-    }
+  if (!username) {
+    return res.status(400).json({
+      error: "Missing 'username'!",
+    });
+  }
 
-    if (matchingPlayer) {
-        return res.status(400).json({
-            error: "Username already registered!"
-        })
-    }
+  if (matchingPlayer) {
+    return res.status(400).json({
+      error: "Username already registered!",
+    });
+  }
 
-    const player = {
-        id,
-        username
-    }
+  const player = {
+    id,
+    username,
+  };
 
-    state.session.users.push(player);
+  state.session.users.push(player);
 
-    console.log(`> Player "${username}" joined!`)
+  console.log(`> Player "${username}" joined!`);
 
-    return res.json(player);
+  return res.json(player);
 });
 
 /**
@@ -134,133 +135,139 @@ app.post("/game/join", (req, res) => {
  * * changing "started" game state
  */
 app.post("/game/start", (req, res) => {
-    const users = [...state.session.users];
-    const pairs = {};
-    const isGameStarted = selectors.getGameIsStarted(state);
+  const users = [...state.session.users];
+  const pairs = {};
+  const isGameStarted = selectors.getGameIsStarted(state);
 
-    if (isGameStarted) {
-        return res.status(403).json({
-            error: "Game already started :("
-        });
-    }
+  if (isGameStarted) {
+    return res.status(403).json({
+      error: "Game already started :(",
+    });
+  }
 
-    // draw pairs of users
-    while (users.length > 1) {
-        const pairId = uuid.v4();
-        const user1 = users.splice(_.random(users.length - 1), 1)[0];
-        const user2 = users.splice(_.random(users.length - 1), 1)[0];
-        const emoji = _.sample(emojis);
-        const color = _.sample(colors);
-        const code1 = crypto.randomBytes(2).toString("hex").toUpperCase();
-        const code2 = crypto.randomBytes(2).toString("hex").toUpperCase();
+  // draw pairs of users
+  while (users.length > 1) {
+    const pairId = uuid.v4();
+    const user1 = users.splice(_.random(users.length - 1), 1)[0];
+    const user2 = users.splice(_.random(users.length - 1), 1)[0];
+    const emoji = _.sample(emojis);
+    const color = _.sample(colors);
+    const code1 = crypto.randomBytes(2).toString("hex").toUpperCase();
+    const code2 = crypto.randomBytes(2).toString("hex").toUpperCase();
 
-        pairs[pairId] = {
-            id: pairId,
-            emoji: emoji.emoji,
-            color,
-            users: [
-                {
-                    userId: user1.id,
-                    code: code1
-                },
-                {
-                    userId: user2.id,
-                    code: code2
-                }
-            ]
-        }
-    }
+    pairs[pairId] = {
+      id: pairId,
+      emoji: emoji.emoji,
+      color,
+      users: [
+        {
+          userId: user1.id,
+          code: code1,
+        },
+        {
+          userId: user2.id,
+          code: code2,
+        },
+      ],
+    };
+  }
 
-    // start the game
-    state.session.pairs = pairs;
-    state.session.started = true;
+  // start the game
+  state.session.pairs = pairs;
+  state.session.started = true;
 
-    console.log(`> Game started! Total of "${state.session.users.length}" players participates!`)
+  console.log(
+    `> Game started! Total of "${state.session.users.length}" players participates!`
+  );
 
-    return res.json(state.session.pairs);
-})
-
+  return res.json(state.session.pairs);
+});
 
 /**
  * Check game status and params of the game for given player
  */
 app.get("/game/status", (req, res) => {
-    const userId = req.query?.userId;
-    const user = selectors.getUser(state, userId);
+  const userId = req.query?.userId;
+  const user = selectors.getUser(state, userId);
 
-    if (!userId) {
-        return res.status(400).json({
-            error: "Missing 'userId' param!"
-        });
-    }
+  if (!userId) {
+    return res.status(400).json({
+      error: "Missing 'userId' param!",
+    });
+  }
 
-    if (!user) {
-        return res.status(403).json({
-            error: `User for "${userId}" userId not found!`
-        });
-    }
+  if (!user) {
+    return res.status(403).json({
+      error: `User for "${userId}" userId not found!`,
+    });
+  }
 
-    if (!state.session.started) {
-        return res.json({
-            status: GAME_STATE.NOT_STARTED,
-            playersCount: state.session.users.length
-        });
-    }
-
-    const pairForUser = selectors.getPairForUser(state, userId);
-
-    if (!pairForUser) {
-        return res.status(404).json({
-            error: `Pair for "${userId}" userId not found!`
-        });
-    }
-
+  if (!state.session.started) {
     return res.json({
-        status: GAME_STATE.STARTED,
-        gameParams: {
-            emoji: pairForUser.emoji,
-            color: pairForUser.color
-        }
-    })
-})
+      status: GAME_STATE.NOT_STARTED,
+      playersCount: state.session.users.length,
+    });
+  }
+
+  const pairForUser = selectors.getPairForUser(state, userId);
+
+  if (!pairForUser) {
+    return res.status(404).json({
+      error: `Pair for "${userId}" userId not found!`,
+    });
+  }
+
+  console.log(pairForUser);
+
+  return res.json({
+    status: GAME_STATE.STARTED,
+    gameParams: {
+      emoji: pairForUser.emoji,
+      color: pairForUser.color,
+      userCode: pairForUser.users.find((user) => user.userId === userId).code,
+    },
+  });
+});
 
 /**
- * Verifies if one player from the pair typed code of the other one 
+ * Verifies if one player from the pair typed code of the other one
  */
 app.post("/game/verify", (req, res) => {
-    const code = req.query?.code;
-    const userId = req.query?.userId;
+  const code = req.body?.code;
+  const userId = req.body?.userId;
 
-    if (!code) {
-        return res.status(400).json({
-            error: "Missing 'code' param!"
-        });
-    }
-
-    if (!userId) {
-        return res.status(400).json({
-            error: "Missing 'userId' param!"
-        });
-    }
-
-    const pairForUser = selectors.getPairForUser(state, userId);
-
-    if (!pairForUser) {
-        return res.status(404).json({
-            error: `Pair for "${userId}" userId not found!`
-        });
-    }
-
-    const matchingPlayer = pairForUser.users.find(user => user.userId !== userId);
-
-    return res.json({
-        success: matchingPlayer.code === code
+  if (!code) {
+    return res.status(400).json({
+      error: "Missing 'code' param!",
     });
+  }
+
+  if (!userId) {
+    return res.status(400).json({
+      error: "Missing 'userId' param!",
+    });
+  }
+
+  const pairForUser = selectors.getPairForUser(state, userId);
+
+  if (!pairForUser) {
+    return res.status(404).json({
+      error: `Pair for "${userId}" userId not found!`,
+    });
+  }
+
+  const matchingPlayer = pairForUser.users.find(
+    (user) => user.userId !== userId
+  );
+
+  return res.json({
+    success: matchingPlayer.code === code,
+  });
 });
 
 ///////////////////
 // STARTUP
 ///////////////////
 app.listen(port, () => {
-    console.log(`> Game server listening on port ${port}!`)
-})
+  console.log(`> Game server listening on port ${port}!`);
+});
