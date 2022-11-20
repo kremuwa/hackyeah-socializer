@@ -25,6 +25,20 @@ const ButtonWrapper = styled.div`
   margin-top: 10vh;
   justify-content: center;
   display: flex;
+
+  & > Button {
+    width: 70%;
+  }
+`;
+
+const CodeInput = styled(Input)`
+  font-size: 1em;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  border-style: inset;
+  padding: 8px;
+  width: 80%;
+  text-align: center;
 `;
 
 const UserCode = styled.div`
@@ -97,7 +111,7 @@ export const Meeting = (props) => {
       {isAttemptingCodeVerification && (
         <CodeVerificationForm onSubmit={handleSubmit}>
           <UserCode>Your code: {userCode}</UserCode>
-          <Input
+          <CodeInput
             value={partnerCode}
             type="text"
             placeholder="Your partner's code"

@@ -37,6 +37,16 @@ const SplashScreenForm = styled.form`
   }
 `
 
+const NameInput = styled(Input)`
+  font-size: 1em;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  border-style: inset;
+  padding: 8px;
+  width: 80%;
+  text-align: center;
+`;
+
 const SplashScreen = () => {
     const [username,setUsername] = useState("");
     const router = useRouter()
@@ -56,7 +66,7 @@ const SplashScreen = () => {
         <WrapperDiv>
             <ScreenTitle>Socializer</ScreenTitle>
             <SplashScreenForm onSubmit={handleSubmit}>
-                <Input value={username} type="text" placeholder="Your username" onChange={changeInput}/>
+                <NameInput value={username} type="text" placeholder="Your username" onChange={changeInput}/>
                 <Button>Join!</Button>
             </SplashScreenForm>
             <Giraffe/>
