@@ -114,7 +114,7 @@ export const Meeting = (props) => {
   return (
     <Wrapper backgroundColor={color}>
       <Twemoji
-        onClick={() => (Math.random() > 0.5 ? play1() : play2)()}
+        onClick={() => (Math.random() > 0.5 ? play1() : play2())}
         options={{
           folder: "svg",
           ext: ".svg",
