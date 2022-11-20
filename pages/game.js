@@ -7,7 +7,7 @@ import {GAME_STATE} from "../helpers/constants";
 import {WaitingRoom} from "@/elements/WaitingRoom";
 import styled from "styled-components";
 
-const {STARTED, NOT_STARTED} = GAME_STATE;
+const {STARTED, NOT_STARTED, FULFILLED} = GAME_STATE;
 
 const GameWrapper = styled.div`
   height: 100vh;
@@ -21,6 +21,7 @@ const Game = () => {
     const router = useRouter()
     const {query = {}} = router
     const {id} = query
+    const isMeeting  = status === STARTED || status === FULFILLED;
 
     const checkGameStatus = useCallback(() => {
         id && status !== STARTED && checkGameForUser({
@@ -54,8 +55,8 @@ const Game = () => {
 
     return (
         <GameWrapper className="container mx-auto my-20 p-5 border-1">
-            {status !== STARTED && <WaitingRoom playersCount={playersCount} status={status} error={error} id={id}/>}
-            {status === STARTED && <Meeting gameParams={gameProps} userId={id}/>}
+            {!isMeeting && <WaitingRoom playersCount={playersCount} status={status} error={error} id={id}/>}
+            {isMeeting && <Meeting isFinished={status === FULFILLED} gameParams={gameProps} userId={id}/>}
         </GameWrapper>
     );
 };

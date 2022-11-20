@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "tunnel": "lt --port 8000 --subdomain socialize",
+    "host": "npm run build && npm run backend",
     "backend": "node server/index.js",
     "backend:watch": "nodemon server/index.js",
-    "expose": "npm-run-all --parallel backend tunnel",
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start"
