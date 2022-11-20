@@ -6,9 +6,7 @@ import { useState, useCallback } from "react";
 import { verifyCode } from "api/verifyCode";
 import { toastError, toastServerError } from "helpers/toast";
 import { Input } from "./Input";
-import giraffe1 from "../../public/sounds/giraffe1.mp3";
-import giraffe2 from "../../public/sounds/giraffe2.mp3";
-import elephant from "../../public/sounds/elephant.mp3";
+import NextLink from "next/link";
 
 import dynamic from "next/dynamic"
 import {getAnimalSound} from "../../helpers/sounds";
@@ -41,7 +39,8 @@ const ButtonWrapper = styled.div`
 
 const CongratsWrapper = styled.div`
   flex-direction: column;
-  justify-content: center;
+  text-align: center;
+  justify-content: space-around;
   display: flex;
   height: 100%;
   align-items: center;
@@ -64,6 +63,7 @@ const CodeInput = styled(Input)`
   border-bottom: 2px solid black;
   background: none;
   width: 80%;
+  text-align: center;
 
   &::placeholder {
     opacity: 0.5;
@@ -97,7 +97,7 @@ const ChatNoSSR = dynamic(() => import("../elements/ChatComponent"), {
 
 export const Meeting = (props) => {
   const { gameParams = {}, userId, isFinished } = props;
-  const { color, emoji, userCode } = gameParams;
+  const { color, emoji, userCode, duration } = gameParams;
   const [isAttemptingCodeVerification, setIsAttemptingCodeVerification] =
     useState(false);
   const [partnerCode, setPartnerCode] = useState("");
@@ -124,12 +124,26 @@ export const Meeting = (props) => {
     setPartnerCode(event.target.value.toUpperCase());
   }, []);
 
+  const toHHMMSS = (numSecs) => {
+    let secNum = parseInt(numSecs, 10);
+    let hours = Math.floor(secNum / 3600).toString().padStart(2, '0');
+    let minutes = Math.floor((secNum - (hours * 3600)) / 60).toString().padStart(2, '0');
+    let seconds = (secNum - (hours * 3600) - (minutes * 60)).toString().padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
   const [play] = useSound(getAnimalSound(emoji));
 
   if (isFinished) {
     return (
       <CongratsWrapper>
-        <Button>Congrats!</Button>
+        {
+          duration && <p>It took you both  {toHHMMSS(duration / 1000)}. Great job!</p>
+        }
+
+        <NextLink href="/">
+          <Button>Go to lobby!</Button>
+        </NextLink>
       </CongratsWrapper>
     );
   }
@@ -166,7 +180,7 @@ export const Meeting = (props) => {
               onChange={changeInput}
               maxLength={4}
             />
-            <dev style={{ display: "flex" }}>
+            <div style={{ display: "flex" }}>
               <Button
                 onClick={() => setIsAttemptingCodeVerification(false)}
                 style={{ background: "none", border: "1px solid white" }}
@@ -174,7 +188,7 @@ export const Meeting = (props) => {
                 Cancel
               </Button>
               <Button style={{ marginLeft: 10 }}>Submit</Button>
-            </dev>
+            </div>
           </CodeVerificationForm>
         </>
       )}
