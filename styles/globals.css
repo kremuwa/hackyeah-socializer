@@ -126,7 +126,7 @@ body {
 }
 
 .message img {
-    padding: 0.5rem;
+    padding: 1px;
 }
 
 .message.sent {
