@@ -11,6 +11,7 @@ import giraffe2 from "../../public/sounds/giraffe2.mp3";
 import elephant from "../../public/sounds/elephant.mp3";
 
 import dynamic from "next/dynamic"
+import {getAnimalSound} from "../../helpers/sounds";
 
 
 const Wrapper = styled.div`
@@ -113,13 +114,12 @@ export const Meeting = (props) => {
     setPartnerCode(event.target.value.toUpperCase());
   }, []);
 
-  const [play1] = useSound(giraffe1);
-  const [play2] = useSound(giraffe2);
+  const [play] = useSound(getAnimalSound(emoji));
 
   return (
     <Wrapper backgroundColor={color}>
       <Twemoji
-        onClick={() => (Math.random() > 0.5 ? play1() : play2())}
+        onClick={play}
         options={{
           folder: "svg",
           ext: ".svg",
