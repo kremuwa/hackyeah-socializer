@@ -224,7 +224,12 @@ app.get("/game/status", (req, res) => {
 
   if (pairForUser.status === "PAIRED") {
     return res.json({
-      status: GAME_STATE.FULFILLED
+      status: GAME_STATE.FULFILLED,
+      gameParams: {
+        emoji: pairForUser.emoji,
+        color: pairForUser.color,
+        userCode: pairForUser.users.find((user) => user.userId === userId).code,
+      },
     });
   }
 
