@@ -58,3 +58,7 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+## License
+
+<a href="https://www.freepik.com/free-vector/cute-sloth-sleeping-pillow-cartoon-vector-icon-illustration-animal-nature-icon-concept-isolated_26259303.htm#query=sleepinglemur&position=0&from_view=search&track=sph?log-in=google">Image by catalyststuff</a> on Freepik

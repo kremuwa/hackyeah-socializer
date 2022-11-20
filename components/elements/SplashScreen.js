@@ -11,7 +11,7 @@ const WrapperDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: start;
 
   width: 100vw;
   height: 100vh;
@@ -19,8 +19,8 @@ const WrapperDiv = styled.div`
 `
 
 const ScreenTitle = styled.h1`
-  font-size: 3em;
-  color: darkslategray;
+  font-size: 2.5em;
+  margin: 1rem;
 `
 
 const SplashScreenForm = styled.form`
@@ -59,7 +59,8 @@ const SplashScreen = () => {
                 <Input value={username} type="text" placeholder="Your username" onChange={changeInput}/>
                 <Button>Join!</Button>
             </SplashScreenForm>
-            <Giraffe></Giraffe>
+            <Giraffe/>
+            <Giraffe kind={2}/>
         </WrapperDiv>
     );
 };
