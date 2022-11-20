@@ -136,6 +136,7 @@ export const Meeting = (props) => {
               type="text"
               placeholder="Your partner's code"
               onChange={changeInput}
+              maxLength={4}
             />
             <Button>Submit</Button>
           </CodeVerificationForm>
