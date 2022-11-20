@@ -64,7 +64,7 @@ const ChatComponent = ({pairId, userId}) => {
 	return <>
 		<div className="chatWindow">
 			{error && <strong>Error: {JSON.stringify(error)}</strong>}
-			{loading && <span>Loading...</span>}
+			{loading && <span><br/>Loading chat...</span>}
 			<>
 				{messages?.map(doc =>
 					<div key={doc.created} className={`message ${doc.user === userId ? "sent" : "received"}`}>

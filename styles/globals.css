@@ -140,3 +140,7 @@ body {
 .Flex.epr-preview.FlexRow {
     display: none;
 }
+
+.epr-main{
+    border-radius: 0 !important;
+}
