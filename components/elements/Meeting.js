@@ -1,10 +1,13 @@
 import styled from "styled-components";
 import Twemoji from "react-twemoji";
+import useSound  from "use-sound";
 import { Button } from "./Button";
 import { useState, useCallback } from "react";
 import { verifyCode } from "api/verifyCode";
 import { toastError, toastServerError } from "helpers/toast";
 import { Input } from "./Input";
+import giraffe1 from "../../public/sounds/giraffe1.mp3";
+import giraffe2 from "../../public/sounds/giraffe2.mp3";
 
 const Wrapper = styled.div`
   align-items: stretch;
@@ -77,9 +80,13 @@ export const Meeting = (props) => {
     setPartnerCode(event.target.value.toUpperCase());
   }, []);
 
+  const [play1] = useSound(giraffe1);
+  const [play2] = useSound(giraffe2);
+
   return (
     <Wrapper backgroundColor={color}>
       <Twemoji
+        onClick={() => Math.random() > 0.5 ? play1() : play2}
         options={{
           folder: "svg",
           ext: ".svg",
