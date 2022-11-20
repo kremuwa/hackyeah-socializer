@@ -55,8 +55,8 @@ const CodeInput = styled(Input)`
 
 const UserCode = styled.div`
   margin-top: 16px;
-  text-shadow: -1px 1px 0 #006400, 1px 1px 0 #006400, 1px -1px 0 #006400,
-    -1px -1px 0 #006400;
+  text-shadow: -1px 1px 0 rgba(0,0,0,0.3), 1px 1px 0 rgba(0,0,0,0.3), 1px -1px 0 rgba(0,0,0,0.3),
+    -1px -1px 0 rgba(0,0,0,0.3);
 `;
 
 const CodeVerificationForm = styled.form`
