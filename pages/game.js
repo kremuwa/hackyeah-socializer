@@ -21,6 +21,7 @@ const Game = () => {
     const router = useRouter()
     const {query = {}} = router
     const {id} = query
+    const isMeeting  = status === STARTED || status === FULFILLED;
 
     const checkGameStatus = useCallback(() => {
         id && status !== STARTED && checkGameForUser({
@@ -55,7 +56,7 @@ const Game = () => {
     return (
         <GameWrapper className="container mx-auto my-20 p-5 border-1">
             {status !== STARTED && <WaitingRoom playersCount={playersCount} status={status} error={error} id={id}/>}
-            {status === STARTED && <Meeting isFinished={status === FULFILLED} gameParams={gameProps} userId={id}/>}
+            {isMeeting && <Meeting isFinished={status === FULFILLED} gameParams={gameProps} userId={id}/>}
         </GameWrapper>
     );
 };
