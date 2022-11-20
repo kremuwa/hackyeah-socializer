@@ -62,3 +62,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 ## License
 
 <a href="https://www.freepik.com/free-vector/cute-sloth-sleeping-pillow-cartoon-vector-icon-illustration-animal-nature-icon-concept-isolated_26259303.htm#query=sleepinglemur&position=0&from_view=search&track=sph?log-in=google">Image by catalyststuff</a> on Freepik
+<a href="https://www.freepik.com/free-vector/happy-birthday-greeting-card-with-cute-giraffe_7264014.htm#query=happy%20giraffe&position=14&from_view=keyword">Image by lesyaskripak</a> on Freepik
