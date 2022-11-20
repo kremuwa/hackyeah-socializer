@@ -3,13 +3,17 @@ import initAuth from "@/auth";
 
 initAuth();
 import { Toaster } from 'react-hot-toast';
-import {AppHead} from "@/elements/Head";
+import { AppHead } from "@/elements/Head";
 
 function MyApp({ Component, pageProps }) {
   return <>
-    <AppHead/>
+    <AppHead />
     <Component {...pageProps} />
-    <Toaster />
+    <Toaster toastOptions={
+      {
+        duration: 2000
+      }
+    } />
   </>;
 }
 

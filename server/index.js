@@ -14,48 +14,48 @@ const port = 8000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname + '/../out', {extensions:['html']}))
+app.use(express.static(__dirname + '/../out', { extensions: ['html'] }))
 
 
 ///////////////////
 // STATE
 ///////////////////
 const state = {
-    session: {
-        started: false,
-        users: [
-            // {
-            //     "id": "19857abe-a028-4090-a11f-907de6ab7007",
-            //     "username": "1"
-            // },
-            // {
-            //     "id": "29857abe-a028-4090-a11f-907de6ab7007",
-            //     "username": "2"
-            // },
-            // {
-            //     "id": "39857abe-a028-4090-a11f-907de6ab7007",
-            //     "username": "3"
-            // }
-        ],
-        pairs: {
-            // "id": {
-            //     id: "id",
-            //     emoji: "🦍",
-            //     color: "#ffffff",
-            //     state: "PAIRING",
-            //     users: [
-            //         {
-            //             code: "ABCD",
-            //             userId: "fsfsaf-fs-afs-afs"
-            //         },
-            //         {
-            //             code: "DEFG",
-            //             userId: "aafsaf-fs-afs-afs"
-            //         }
-            //     ]
-            // }
-        }
+  session: {
+    started: false,
+    users: [
+      // {
+      //     "id": "19857abe-a028-4090-a11f-907de6ab7007",
+      //     "username": "1"
+      // },
+      // {
+      //     "id": "29857abe-a028-4090-a11f-907de6ab7007",
+      //     "username": "2"
+      // },
+      // {
+      //     "id": "39857abe-a028-4090-a11f-907de6ab7007",
+      //     "username": "3"
+      // }
+    ],
+    pairs: {
+      // "id": {
+      //     id: "id",
+      //     emoji: "🦍",
+      //     color: "#ffffff",
+      //     state: "PAIRING",
+      //     users: [
+      //         {
+      //             code: "ABCD",
+      //             userId: "fsfsaf-fs-afs-afs"
+      //         },
+      //         {
+      //             code: "DEFG",
+      //             userId: "aafsaf-fs-afs-afs"
+      //         }
+      //     ]
+      // }
     }
+  }
 };
 
 //////////////////
@@ -188,6 +188,26 @@ app.post("/game/start", (req, res) => {
   return res.json(state.session.pairs);
 });
 
+
+app.post("/game/stop", (req, res) => {
+  const isGameStarted = selectors.getGameIsStarted(state);
+
+  if (!isGameStarted) {
+    return res.status(403).json({
+      error: "Game not started :(",
+    });
+  }
+
+  // reset the game
+  state.session.pairs = {};
+  state.session.started = false;
+
+  return res.status(200).send();
+});
+
+
+
+
 /**
  * Check game status and params of the game for given player
  */
@@ -272,15 +292,18 @@ app.post("/game/verify", (req, res) => {
     });
   }
 
-  // change pair status
-  pairForUser.status = "PAIRED";
-
   const matchingPlayer = pairForUser.users.find(
     (user) => user.userId !== userId
   );
 
+  const isCodeValid = matchingPlayer.code === code;
+  if (isCodeValid) {
+    // change pair status
+    pairForUser.status = "PAIRED";
+  }
+
   return res.json({
-    success: matchingPlayer.code === code,
+    success: isCodeValid
   });
 });
 
@@ -292,7 +315,7 @@ app.listen(port, () => {
   Object.keys(ifaces).forEach(function (dev) {
     ifaces[dev].forEach(function (details) {
       if (details.family === 'IPv4') {
-        console.info(('  http://'  + details.address + ':' + port.toString()));
+        console.info(('  http://' + details.address + ':' + port.toString()));
       }
     });
   });

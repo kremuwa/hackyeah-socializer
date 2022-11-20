@@ -12,6 +12,8 @@ const {STARTED, NOT_STARTED, FULFILLED} = GAME_STATE;
 const GameWrapper = styled.div`
   height: 100vh;
 `
+const POLLING_INTERVAL = 3000;
+
 
 const Game = () => {
     const [error, setError] = useState()
@@ -55,7 +57,7 @@ const Game = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             checkGameStatus();
-        }, 1000);
+        }, POLLING_INTERVAL);
         return () => clearInterval(interval);
     }, [id])
 

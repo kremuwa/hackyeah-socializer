@@ -8,6 +8,8 @@ import { toastError, toastServerError } from "helpers/toast";
 import { Input } from "./Input";
 import giraffe1 from "../../public/sounds/giraffe1.mp3";
 import giraffe2 from "../../public/sounds/giraffe2.mp3";
+import elephant from "../../public/sounds/elephant.mp3";
+
 import dynamic from "next/dynamic"
 
 
@@ -82,8 +84,6 @@ const ChatNoSSR = dynamic(() => import('../elements/ChatComponent'), {
 
 export const Meeting = (props) => {
   const { gameParams = {}, userId } = props;
-  console.log('meeting:' , userId);
-  console.log('gameParam:' , gameParams);
   const { color, emoji, userCode } = gameParams;
   const [isAttemptingCodeVerification, setIsAttemptingCodeVerification] =
     useState(false);
@@ -119,7 +119,7 @@ export const Meeting = (props) => {
   return (
     <Wrapper backgroundColor={color}>
       <Twemoji
-        onClick={() => (Math.random() > 0.5 ? play1() : play2)}
+        onClick={() => (Math.random() > 0.5 ? play1() : play2)()}
         options={{
           folder: "svg",
           ext: ".svg",
