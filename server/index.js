@@ -2,10 +2,12 @@ const express = require("express");
 const uuid = require("uuid");
 const _ = require("lodash");
 const cors = require("cors");
+const os = require("os");
 const emojis = require("./emoji");
 const colors = require("./colors");
 const { GAME_STATE } = require("./game-state");
 const crypto = require("crypto");
+const ifaces = os.networkInterfaces();
 
 const app = express();
 const port = 8000;
@@ -269,5 +271,12 @@ app.post("/game/verify", (req, res) => {
 // STARTUP
 ///////////////////
 app.listen(port, () => {
-  console.log(`> Game server listening on port ${port}!`);
+  console.log(`> Game server listening on:`);
+  Object.keys(ifaces).forEach(function (dev) {
+    ifaces[dev].forEach(function (details) {
+      if (details.family === 'IPv4') {
+        console.info(('  http://'  + details.address + ':' + port.toString()));
+      }
+    });
+  });
 });
