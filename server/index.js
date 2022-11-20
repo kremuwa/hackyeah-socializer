@@ -42,6 +42,7 @@ const state = {
             //     id: "id",
             //     emoji: "🦍",
             //     color: "#ffffff",
+            //     state: "PAIRING",
             //     users: [
             //         {
             //             code: "ABCD",
@@ -156,11 +157,13 @@ app.post("/game/start", (req, res) => {
     const color = _.sample(colors);
     const code1 = crypto.randomBytes(2).toString("hex").toUpperCase();
     const code2 = crypto.randomBytes(2).toString("hex").toUpperCase();
+    const status = "PAIRING";
 
     pairs[pairId] = {
       id: pairId,
       emoji: emoji.emoji,
       color,
+      status,
       users: [
         {
           userId: user1.id,
@@ -219,7 +222,11 @@ app.get("/game/status", (req, res) => {
     });
   }
 
-  console.log(pairForUser);
+  if (pairForUser.status === "PAIRED") {
+    return res.json({
+      status: GAME_STATE.FULFILLED
+    });
+  }
 
   return res.json({
     status: GAME_STATE.STARTED,
@@ -257,6 +264,9 @@ app.post("/game/verify", (req, res) => {
       error: `Pair for "${userId}" userId not found!`,
     });
   }
+
+  // change pair status
+  pairForUser.status = "PAIRED";
 
   const matchingPlayer = pairForUser.users.find(
     (user) => user.userId !== userId
