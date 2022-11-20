@@ -23,7 +23,6 @@ const ScreenTitle = styled.h1`
   color: darkslategray;
 `
 
-
 const SplashScreenForm = styled.form`
   z-index: 2;
   align-items: center;

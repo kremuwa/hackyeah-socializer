@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000/'
+const API_URL = 'https://socialize.loca.lt/'
 
 export const sendRequest = ({url, method = "POST", data, query}) => {
     const options = {
