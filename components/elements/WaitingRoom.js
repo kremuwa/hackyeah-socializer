@@ -1,4 +1,3 @@
-import Image from "next/image";
 import {GAME_STATE} from "../../helpers/constants";
 import styled from "styled-components";
 import {GameLoadingAnimation} from "@/elements/GameLoadingAnimation";
@@ -25,7 +24,7 @@ export const WaitingRoom = ({id, error, playersCount, status}) => {
         {error && <p>{error}</p>}
         {status === GAME_STATE.NOT_STARTED && <div>
             <GameLoadingAnimation>
-                <Image src="/images/lemur_sleeping.png" width={256} height={162}/>
+                <img src="/images/lemur_sleeping.png" width={256} height={162}/>
             </GameLoadingAnimation>
             <p>Game not started yet</p>
             {playersCount && <p>Waiting Players: {playersCount}</p>}
