@@ -40,10 +40,16 @@ const ButtonWrapper = styled.div`
 const CongratsWrapper = styled.div`
   flex-direction: column;
   text-align: center;
-  justify-content: space-around;
+  justify-content: center;
   display: flex;
   height: 100%;
   align-items: center;
+  
+  img{
+    max-height: 260px;
+    width: auto;
+    margin: 2rem;
+  }
 
   & > Button {
     width: 80%;
@@ -137,10 +143,10 @@ export const Meeting = (props) => {
   if (isFinished) {
     return (
       <CongratsWrapper>
+          <img src="/images/congratulations.png" alt="happy"/>
         {
           duration && <p>It took you both  {toHHMMSS(duration / 1000)}. Great job!</p>
         }
-
         <NextLink href="/">
           <Button>Go to lobby!</Button>
         </NextLink>
