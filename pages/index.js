@@ -4,13 +4,6 @@ export default function Home({ data }) {
   //{data} is from getStaticProps() exported below.
   return (
     <div>
-      <Head>
-        <title>Socializer</title>
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="preload" href="/fonts/AlfaSlabOne-Regular.woff2" as="font" type="font/woff2" crossOrigin="true"></link>
-      </Head>
-
       <main>
         <SplashScreen />
       </main>
