@@ -7,6 +7,10 @@ const GiraffeSecond = css`
     height: 60vmin;
     transform: scaleX(-1);
   }
+
+  .head::after {
+    animation-delay: 2s;
+  }
 `
 
 const GiraffeWrapper = styled.div`
@@ -23,8 +27,6 @@ const GiraffeWrapper = styled.div`
     height: 70vmin;
     overflow: visible;
   }
-
-  ${props => props.kind !== 2 && GiraffeSecond}
   
   .cartoon div {
     position: absolute;
@@ -69,7 +71,7 @@ const GiraffeWrapper = styled.div`
     border-radius: 50%;
     left: 50%;
     box-shadow: 0 0 0 1.5vmin var(--brown),
-    6vmin 1vmin,
+    6vmin 1vmin black,
     6vmin 1vmin 0 1.5vmin var(--brown);
   }
 
@@ -103,7 +105,8 @@ const GiraffeWrapper = styled.div`
     background: black;
     top: 40%;
     left: 45%;
-    box-shadow: 6vmin 0
+    box-shadow: 6vmin 0 black;
+    animation: blink-animation 3s steps(5, start) infinite;
   }
 
   .head::before {
@@ -189,6 +192,19 @@ const GiraffeWrapper = styled.div`
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%, 10% 49.5%, 0% 49%, 0% 20%, 10% 19.5%, 0% 19%, 5% 18.75%, 0% 18.5%)
   }
 
+  ${props => props.kind !== 2 && GiraffeSecond}
+  
+  @keyframes blink-animation {
+    0% {
+      visibility: visible;
+    }
+    90% {
+      visibility: visible;
+    }
+    100% {
+      visibility: hidden;
+    }
+  }
 `
 
 export const Giraffe = ({kind}) => {
