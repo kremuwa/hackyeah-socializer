@@ -19,6 +19,7 @@ export default function Home({data}) {
                 <meta name="msapplication-TileColor" content="#da532c"/>
                 <meta name="theme-color" content="#ffffff"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <meta name="theme-color" content="#61358a" />
                 <link rel="preload" href="/fonts/Zorque-Regular.woff2" as="font" type="font/woff2"
                       crossOrigin="true"></link>
             </Head>
