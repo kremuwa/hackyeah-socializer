@@ -32,17 +32,24 @@ const ButtonWrapper = styled.div`
 `;
 
 const CodeInput = styled(Input)`
-  font-size: 1em;
+  font-size: 0.8em;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 8px;
+  text-shadow: -1px 1px 0 #fff, 1px 1px 0 #fff, 1px -1px 0 #fff, -1px -1px 0 #fff;
   border-style: inset;
+  border-width: 2px;
   padding: 8px;
   width: 80%;
   text-align: center;
+
+  &::placeholder {
+    opacity: 0.5;
+  }
 `;
 
 const UserCode = styled.div`
   margin-bottom: 16px;
+  text-shadow: -1px 1px 0 #006400, 1px 1px 0 #006400, 1px -1px 0 #006400, -1px -1px 0 #006400;
 `;
 
 const CodeVerificationForm = styled.form`
@@ -52,10 +59,11 @@ const CodeVerificationForm = styled.form`
   display: inline-flex;
   flex-direction: column;
   background-color: rgba(208, 208, 208, 0.3);
-  padding: 5vh;
+  margin-top: 16px;
+  padding: 16px;
 
   ${Button} {
-    margin-top: 5vh;
+    margin-top: 16px;
   }
 `;
 
@@ -111,6 +119,7 @@ export const Meeting = (props) => {
       {isAttemptingCodeVerification && (
         <CodeVerificationForm onSubmit={handleSubmit}>
           <UserCode>Your code: {userCode}</UserCode>
+          <hr style={{width: "100%", marginBottom: 24 }}/>
           <CodeInput
             value={partnerCode}
             type="text"
