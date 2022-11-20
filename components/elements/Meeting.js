@@ -30,12 +30,24 @@ const Wrapper = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
-  margin-top: 10vh;
+  margin-top: 2vh;
   justify-content: center;
   display: flex;
 
   & > Button {
-    width: 70%;
+    width: 80%;
+  }
+`;
+
+const CongratsWrapper = styled.div`
+  flex-direction: column;
+  justify-content: center;
+  display: flex;
+  height: 100%;
+  align-items: center;
+
+  & > Button {
+    width: 80%;
   }
 `;
 
@@ -60,8 +72,8 @@ const CodeInput = styled(Input)`
 
 const UserCode = styled.div`
   margin-top: 16px;
-  text-shadow: -1px 1px 0 rgba(0,0,0,0.3), 1px 1px 0 rgba(0,0,0,0.3), 1px -1px 0 rgba(0,0,0,0.3),
-    -1px -1px 0 rgba(0,0,0,0.3);
+  text-shadow: -1px 1px 0 rgba(0, 0, 0, 0.3), 1px 1px 0 rgba(0, 0, 0, 0.3),
+    1px -1px 0 rgba(0, 0, 0, 0.3), -1px -1px 0 rgba(0, 0, 0, 0.3);
 `;
 
 const CodeVerificationForm = styled.form`
@@ -79,16 +91,15 @@ const CodeVerificationForm = styled.form`
   }
 `;
 
-const ChatNoSSR = dynamic(() => import('../elements/ChatComponent'), {
-  ssr: false
-})
+const ChatNoSSR = dynamic(() => import("../elements/ChatComponent"), {
+  ssr: false,
+});
 
 export const Meeting = (props) => {
-  const { gameParams = {}, userId } = props;
+  const { gameParams = {}, userId, isFinished } = props;
   const { color, emoji, userCode } = gameParams;
   const [isAttemptingCodeVerification, setIsAttemptingCodeVerification] =
     useState(false);
-  const [isPartnerFound, setIsPartnerFound] = useState(false);
   const [partnerCode, setPartnerCode] = useState("");
 
   const handleSubmit = useCallback(
@@ -98,7 +109,6 @@ export const Meeting = (props) => {
         .then((response) => {
           if (response.success) {
             setIsAttemptingCodeVerification(false);
-            setIsPartnerFound(true);
           } else {
             toastError(
               "The entered code is incorrect. Are you sure the animal and the color are the same on both phones?"
@@ -116,6 +126,14 @@ export const Meeting = (props) => {
 
   const [play] = useSound(getAnimalSound(emoji));
 
+  if (isFinished) {
+    return (
+      <CongratsWrapper>
+        <Button>Congrats!</Button>
+      </CongratsWrapper>
+    );
+  }
+
   return (
     <Wrapper backgroundColor={color}>
       <Twemoji
@@ -127,12 +145,15 @@ export const Meeting = (props) => {
       >
         {emoji}
       </Twemoji>
-      {!isAttemptingCodeVerification && !isPartnerFound && (
-        <ButtonWrapper>
-          <Button onClick={() => setIsAttemptingCodeVerification(true)}>
-            I found my partner!
-          </Button>
-        </ButtonWrapper>
+      {!isAttemptingCodeVerification && (
+        <>
+          <ButtonWrapper>
+            <Button onClick={() => setIsAttemptingCodeVerification(true)}>
+              I found my partner!
+            </Button>
+          </ButtonWrapper>
+          <ChatNoSSR pairId={gameParams.pairId} userId={userId} />
+        </>
       )}
       {isAttemptingCodeVerification && (
         <>
@@ -145,16 +166,18 @@ export const Meeting = (props) => {
               onChange={changeInput}
               maxLength={4}
             />
-            <Button>Submit</Button>
+            <dev style={{ display: "flex" }}>
+              <Button
+                onClick={() => setIsAttemptingCodeVerification(false)}
+                style={{ background: "none", border: "1px solid white" }}
+              >
+                Cancel
+              </Button>
+              <Button style={{ marginLeft: 10 }}>Submit</Button>
+            </dev>
           </CodeVerificationForm>
         </>
       )}
-      {isPartnerFound && (
-        <ButtonWrapper>
-          <Button>Congrats!</Button>
-        </ButtonWrapper>
-      )}
-      <ChatNoSSR pairId={gameParams.pairId} userId={userId}/>
     </Wrapper>
   );
 };

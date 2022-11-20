@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Button = styled.button`
   display: block;
   position: relative;
-  padding: 0.8em 2.2em;
+  padding: 0.8em;
   cursor: pointer;
   color: black;
 
