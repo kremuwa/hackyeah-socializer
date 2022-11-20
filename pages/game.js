@@ -64,7 +64,7 @@ const Game = () => {
     return (
         <GameWrapper className="container mx-auto my-20 p-5 border-1">
             {!isMeeting && <WaitingRoom playersCount={playersCount} status={status} error={error} id={id}/>}
-            {isMeeting && <Meeting isFinished={status === FULFILLED} gameParams={gameProps} userId={id}/>}
+            {isMeeting && gameProps?.emoji && <Meeting isFinished={status === FULFILLED} gameParams={gameProps} userId={id}/>}
         </GameWrapper>
     );
 };

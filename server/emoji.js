@@ -92,7 +92,6 @@ module.exports = [
     {"emoji": "🐡", "name": "Blowfish"},
     {"emoji": "🦈", "name": "Shark"},
     {"emoji": "🐙", "name": "Octopus"},
-    {"emoji": "🪸", "name": "Coral"},
     {"emoji": "🐌", "name": "Snail"},
     {"emoji": "🦋", "name": "Butterfly"},
     {"emoji": "🐛", "name": "Bug"},

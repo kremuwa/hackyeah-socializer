@@ -180,6 +180,7 @@ app.post("/game/start", (req, res) => {
   // start the game
   state.session.pairs = pairs;
   state.session.started = true;
+  state.session.startTimestamp = Date.now();
 
   console.log(
     `> Game started! Total of "${state.session.users.length}" players participates!`
@@ -247,6 +248,7 @@ app.get("/game/status", (req, res) => {
       status: GAME_STATE.FULFILLED,
       gameParams: {
         pairId: pairForUser.id,
+        duration: pairForUser.pairedTimespamp - state.session.startTimestamp,
         emoji: pairForUser.emoji,
         color: pairForUser.color,
         userCode: pairForUser.users.find((user) => user.userId === userId).code,
@@ -258,6 +260,7 @@ app.get("/game/status", (req, res) => {
     status: GAME_STATE.STARTED,
     gameParams: {
       pairId: pairForUser.id,
+      duration: pairForUser.pairedTimespamp - state.session.startTimestamp,
       emoji: pairForUser.emoji,
       color: pairForUser.color,
       userCode: pairForUser.users.find((user) => user.userId === userId).code,
@@ -300,6 +303,7 @@ app.post("/game/verify", (req, res) => {
   if (isCodeValid) {
     // change pair status
     pairForUser.status = "PAIRED";
+    pairForUser.pairedTimespamp = Date.now();
   }
 
   return res.json({
